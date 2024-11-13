@@ -97,8 +97,8 @@ DATABASES = {
         'NAME': os.getenv("DB_NAME"),
         'USER': os.getenv("DB_USER"),
         'PASSWORD': os.getenv("DB_PASSWORD"),
-        'HOST': os.getenv("DB_HOST"),  # Если база данных установлена локально
-        'PORT': os.getenv("DB_PORT"),  # Порт, на котором работает PostgreSQL
+        'HOST': os.getenv("DB_HOST"),
+        'PORT': os.getenv("DB_PORT"),
     }
 }
 
@@ -153,8 +153,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Users
 AUTH_USER_MODEL = 'players.Player'
-LOGIN_REDIRECT_URL = 'players:index'  # Замените на ваш URL или имя представления
-LOGOUT_REDIRECT_URL = 'news:index'  # Замените на ваш URL или имя представления
+LOGIN_REDIRECT_URL = 'players:index'
+LOGOUT_REDIRECT_URL = 'news:index'
 
 AUTHENTICATION_ERROR_MESSAGES = {
     'invalid_login': 'Пожалуйста, введите правильные логин и пароль. Оба поля могут быть чувствительны к регистру.',
