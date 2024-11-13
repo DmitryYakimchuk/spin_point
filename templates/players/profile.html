@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} {{ title }} {% endblock %}
+{% block content %}
+
+
+<div class="my-4 col-12 col-md-6 col-lg-4">
+        <div class="d-flex justify-content-center">
+            <img class="mb-4" src="{% if user.photo %}{{ user.photo.url }}
+                                  {% else %}{% static 'img/default/ava_default.png' %}
+                                  {% endif %}" width="150px" height="150px">
+        </div>
+
+    <form method="POST" action="{% url 'players:profile' %}" enctype="multipart/form-data">
+       {% csrf_token %}
+        <table class="table table-striped">
+
+            <tr>
+                <td>
+                    <label class="fw-bold align-middle">Логин:</label>
+                </td>
+                <td valign="top">
+                    {{ user.username }}
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <label class="fw-bold align-middle">Email:</label>
+                </td>
+                <td valign="top">
+                    {{ user.email }}
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <label class="fw-bold align-middle">Рейтинг:</label>
+                </td>
+                <td valign="top">
+                    {{ player_last_rating }}
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <label class="fw-bold align-middle">Позиция:</label>
+                </td>
+                <td valign="top">
+                    {{ player_last_position }}
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <label class="fw-bold align-middle" for="{{ form.first_name.id_for_label }}">Имя:</label>
+                </td>
+                <td valign="top">
+                    {{ form.first_name }}
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <label class="fw-bold align-middle" for="{{ form.last_name.id_for_label }}">Фамилия:</label>
+                </td>
+                <td valign="top">
+                    {{ form.last_name }}
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <label class="fw-bold align-middle" for="{{ form.middle_name.id_for_label }}">Отчество:</label>
+                </td>
+                <td valign="top">
+                    {{ form.middle_name }}
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <label class="fw-bold align-middle" for="{{ form.phone_number.id_for_label }}">Телефон:</label>
+                </td>
+                <td valign="top">
+                    {{ form.phone_number }}
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <label class="fw-bold align-middle" for="{{ form.telegram_nick.id_for_label }}">Telegram:</label>
+                </td>
+                <td valign="top">
+                    {{ form.telegram_nick }}
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <label class="fw-bold align-middle" for="{{ form.photo.id_for_label }}">Обновить фото:</label>
+                </td>
+                <td valign="top">
+                    {{ form.photo }}
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <label class="fw-bold align-middle" for="{{ form.sex.id_for_label }}">Пол:</label>
+                </td>
+                <td valign="top">
+                    {{ form.sex }}
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <label class="fw-bold align-middle" for="{{ form.city.id_for_label }}">Город:</label>
+                </td>
+                <td valign="top">
+                    {{ form.city }}
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <label class="fw-bold align-middle" for="{{ form.role.id_for_label }}">Роль:</label>
+                </td>
+                <td valign="top">
+                    {{ form.role }}
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <label class="fw-bold align-middle" for="{{ form.skill_level.id_for_label }}">Уровень игры:</label>
+                </td>
+                <td valign="top">
+                    {{ form.skill_level }}
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <label class="fw-bold align-middle" for="{{ form.playstyle.id_for_label }}">Стиль игры:</label>
+                </td>
+                <td valign="top">
+                    {{ form.playstyle }}
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <label class="fw-bold align-middle" for="{{ form.hand.id_for_label }}">Игровая рука:</label>
+                </td>
+                <td>
+                    {{ form.hand }}
+                </td>
+            </tr>
+
+            <tr>
+                <td class="align-top">
+                    <label class="fw-bold align-middle" for="{{ form.about.id_for_label }}">Обо мне:</label>
+                </td>
+                <td>
+                    {{ form.about }}
+                </td>
+            </tr>
+        </table>
+
+        <button type="submit" class="btn btn-primary">Обновить</button>
+    </form>
+        <div class="my-2" style="background-color: rgba(255, 0, 0, 0.1);">
+            {{ form.photo.errors }}
+            {{ form.first_name.errors }}
+            {{ form.last_name.errors }}
+            {{ form.middle_name.errors }}
+            {{ form.sex.errors }}
+            {{ form.city.errors }}
+            {{ form.role.errors }}
+            {{ form.skill_level.errors }}
+            {{ form.playstyle.errors }}
+            {{ form.hand.errors }}
+        </div>
+
+</div>
+
+<!--Отображение графика рейтинга-->
+<div class="mb-4 mt-4 col-12 col-md-6 col-lg-4 d-flex justify-content-center">
+    {% include 'players/graphical_rating.html' %}
+</div>
+
+{% endblock content%}

@@ -1,0 +1,32 @@
+<div class="container m-1 p-1 border-bottom">
+    <div class="btn-group me-2" role="group" aria-label="First group">
+        <a href="{% url 'clubs:club_list_news' club_pk=club.pk %}"><button type="button" class="btn btn-light text-uppercase">Новости</button></a>
+        <a href="{% url 'clubs:club_players' club.pk %}"><button type="button" class="btn btn-light text-uppercase">Участники</button></a>
+        <a href="{% url 'clubs:create_club' %}"><button type="button" class="btn btn-light text-uppercase">Игры</button></a>
+        <a href="{% url 'clubs:participation_in_clubs' %}"><button type="button" class="btn btn-light text-uppercase">Галерея</button></a>
+        <a href="{% url 'clubs:participation_in_clubs' %}"><button type="button" class="btn btn-light text-uppercase">Отзывы</button></a>
+        <a href="{% url 'clubs:club' club.pk %}"><button type="button" class="btn btn-light text-uppercase">О_клубе</button></a>
+        {% if request.user in club.members.all %}
+            {% if request.user != club.owner %}
+                <a href="{% url 'news:creating_news' %}"><button type="button" class="btn btn-light text-uppercase">Предложить_новость</button></a>
+            {% else %}
+                <div class="dropdown">
+                  <a class="btn btn-warning dropdown-toggle text-uppercase" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                    Управление клубом
+                  </a>
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                      <li><a class="dropdown-item" href="{% url 'clubs:edit_club' club.pk %}">Изменить карточку клуба</a></li>
+                      <li><a class="dropdown-item" href="{% url 'news:creating_news' %}">Опубликовать новость</a></li>
+                      <li><a class="dropdown-item" href="{% url 'clubs:potential_club_news_list' club_pk=club.pk %}">Предложенные новости</a></li>
+                    {% if not club.is_open %}
+                        <li><a class="dropdown-item" href="{% url 'clubs:potential_members' club_pk=club.pk %}">Потенциальные участники</a></li>
+                    {% endif %}
+                  </ul>
+                </div>
+            {% endif %}
+        {% endif %}
+        {% if user not in club.members.all %}
+            <a href="{% url 'clubs:add_to_open_club_members' club_pk=club.pk %}" class="btn btn-primary text-uppercase mx-1">Вступить</a>
+        {% endif %}
+    </div>
+</div>

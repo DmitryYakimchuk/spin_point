@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+
+<h2>{{ title }}</h2>
+<div class="mb-4 col-12 col-md-6 col-lg-4">
+    {% if update %}
+        <form method="POST" action="{% url 'events:update_event' event.pk %}" enctype="multipart/form-data">
+    {% else %}
+        <form method="POST" action="{% url 'events:create_event' %}" enctype="multipart/form-data">
+    {% endif %}
+       {% csrf_token %}
+       <table class="registration-form">
+        <tr>
+            <td>
+                <label for="{{ form.name.id_for_label }}">Название события</label>
+            </td>
+            <td valign="top">
+                {{ form.name }}
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <label for="{{ form.is_open.id_for_label }}">Открытое/закрытое</label>
+            </td>
+            <td valign="top">
+                {{ form.is_open }}
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <label for="{{ form.city.id_for_label }}">Город</label>
+            </td>
+            <td valign="top">
+                {{ form.city }}
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <label for="{{ form.start_time.id_for_label }}">Начало</label>
+            </td>
+            <td>
+                {{ form.start_time }}{{ form.start_date }}
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <label for="{{ form.finish_time.id_for_label }}">Завершение</label>
+            </td>
+            <td>
+                {{ form.finish_time }}{{ form.finish_date }}
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <label for="{{ form.addr.id_for_label }}">Адрес</label>
+            </td>
+            <td valign="top">
+                {{ form.addr }}
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <label for="{{ form.description.id_for_label }}">Описание</label>
+            </td>
+            <td valign="top">
+                {{ form.description }}
+            </td>
+        </tr>
+    </table>
+
+        <div class="my-2" style="background-color: rgba(255, 0, 0, 0.1);">
+            {{ form.name.errors }}
+            {{ form.is_open.errors }}
+            {{ form.city.errors }}
+            {{ form.club.errors }}
+            {{ form.start_time.errors }}
+            {{ form.start_date.errors }}
+            {{ form.finish_time.errors }}
+            {{ form.finish_date.errors }}
+            {{ form.addr.errors }}
+            {{ form.description.errors }}
+        </div>
+        {% if update %}
+            <button type="submit" class="btn btn-primary text-uppercase">Редактировать</button>
+        {% else %}
+            <button type="submit" class="btn btn-primary text-uppercase">Добавить событие</button>
+        {% endif %}
+    </form>
+</div>
+
+
+{% endblock content %}

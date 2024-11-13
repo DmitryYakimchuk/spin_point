@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Результаты игр{% endblock %}
+{% block content %}
+<!-- Фильтры для рейтинга -->
+{% include 'players/players_filter.html' %}
+
+
+<!-- Таблица рейтинга -->
+<div class="my-2 col-12 col-md-6 col-lg-4 card">
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Игрок</th>
+                <th scope="col">Рейтинг</th>
+                <th scope="col">Позиция</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for player in page_obj %}
+            <tr>
+                <th scope="row">{{ forloop.counter|add:start }}</th>
+                <td>
+                    <a class="navbar-footer nav-link" href="{% url 'players:player_info' player.username %}">{{ player.username }}</a>
+                </td>
+                <td>{{ player.latest_rating }}</td>
+                <td>{{ player.position }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% include 'paginator_with_filter.html' %}
+</div>
+
+
+{% endblock content%}

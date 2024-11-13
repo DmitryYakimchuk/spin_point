@@ -1,0 +1,100 @@
+{% load static %}
+<script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+
+<script>
+    $(document).ready(function() {
+        $('.list-group-item').mouseenter(function() {
+            var notificationPk = $(this).data('notification-pk');
+            if (!$(this).data('read')) {
+                $(this).addClass('bg-light'); // Удаляем класс bg-light при первом наведении мыши
+                $(this).data('read', true); // Устанавливаем атрибут data-read в true, чтобы отметить уведомление как прочитанное
+                $.ajax({
+                    type: 'POST',
+                    url: '/players/notifications/actions/',
+                    data: {
+                        'action': 'mark_as_read', // Помечаем уведомление как прочитанное при первом наведении
+                        'notification_pk': notificationPk,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function(response) {
+                        // Обработка успешного ответа
+                    }
+                });
+            }
+        });
+
+        $('.list-group-item .btn-close').click(function(event) {
+            event.stopPropagation(); // Предотвращаем всплытие события
+            var notificationPk = $(this).closest('.list-group-item').data('notification-pk');
+            $.ajax({
+                type: 'POST',
+                url: '/players/notifications/actions/',
+                data: {
+                    'action': 'delete', // Удаляем уведомление при клике на кнопку
+                    'notification_pk': notificationPk,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function(response) {
+                    if (response.success) {
+                        // Удаляем соответствующий элемент списка <li> после успешного удаления уведомления
+                        $('[data-notification-pk="' + notificationPk + '"]').remove();
+                    }
+                }
+            });
+        });
+    });
+</script>
+
+
+<script>
+    function deleteNotification(notificationId) {
+        // Заглушка для функции удаления уведомления
+    }
+</script>
+
+
+
+
+
+<script>
+$(document).ready(function(){
+    $('.reject-invitation').click(function(e){
+        e.preventDefault();
+        var container = $(this).closest('span');
+        container.find('#rejection-reason-input').show(); // Показываем блок ввода причины отказа
+    });
+
+    $('.rejection-form').on('keydown', '#rejection-reason', function(e) {
+        if (e.ctrlKey && e.keyCode == 13) { // Проверяем, были ли нажаты Ctrl+Enter
+            e.preventDefault();
+            $(this).closest('.rejection-form').find('.send-rejection').click(); // Вызываем клик на кнопку "Отказать"
+        }
+    });
+
+    $('.send-rejection').click(function(e){
+        e.preventDefault();
+        var container = $(this).closest('span');
+        var FieldToChange = container.find('.reject-invitation'); // ссылка на кнопку "Отклонить"
+        var invitation_pk = container.data('invitation-pk'); // получаем значение invitation_pk из родительского элемента
+        var player_pk = container.data('player-pk'); // получаем значение player_pk из родительского элемента
+        var rejection_reason = container.find('#rejection-reason').val(); // получаем введенную причину отказа
+        $.ajax({
+            url: '/events/reject_invitation/' + invitation_pk + '/' + player_pk + '/',
+            type: 'POST',
+            data: {
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+                'rejection_reason': rejection_reason // включаем причину отказа в данные запроса
+            },
+            success: function(response){
+                if (response.success) {
+                    container.find('#result-for-reaction-to-invitation-' + invitation_pk).html('Приглашение отклонено.'); // изменяем содержимое
+                    container.remove(); // Удаляем блок уведомления
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("AJAX error occurred:", xhr.responseText);
+            }
+        });
+    });
+});
+</script>

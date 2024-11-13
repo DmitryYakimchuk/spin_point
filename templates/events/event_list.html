@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ title }}{% endblock %}
+{% block javascripts %}{% include 'news/news_like.html' %}{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+  <h3 class="text-center">{{ title }}</h3>
+  {% for item in events %}
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title">{{ item.name }}</h5>
+          <small class="text-muted">Начало: {{ item.start_time }} {{ item.start_date }}</small>
+          <br>
+          <small class="text-muted">Завершение: {{ item.finish_time }} {{ item.finish_date }}</small>
+        <br>
+          <small class="text-muted">Инициатор: <a href="{% url 'players:player_info' username=item.initiator.username %}">{{ item.initiator.username }}</a></small>
+        <br>
+        <small class="text-muted">Участников: {{ item.participants.all|length }}</small>
+        <br>
+          {% if item.club %}
+            {% if item.club.is_open or request.user in item.club.members.all %}
+              <small class="text-muted">Событие связано с клубом "<a href="{% url 'clubs:club' item.club.pk %}">{{ item.club.name }}"</a></small>
+            {% else %}
+              <small class="text-muted">Событие связано с клубом "{{ item.club.name }}"</small>
+            {% endif %}
+            <br>
+          {% endif %}
+        <small class="text-muted">Город: {{ item.city.name }}</small>
+        <br>
+          <small class="text-muted">Адрес: {{ item.addr }}</small>
+        <br>
+        <a href="{% url 'events:event' event_pk=item.pk %}" class="btn btn-primary">Подробнее</a>
+      </div>
+    </div>
+  {% endfor %}
+  {% include 'paginator.html' %}
+</div>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+
+<h2>{{ title }}</h2>
+<div class="mb-4 col-12 col-md-6 col-lg-4">
+    <form method="POST" action="{% url 'news:creating_news' %}" enctype="multipart/form-data">
+       {% csrf_token %}
+       <table class="registration-form">
+        <tr>
+            <td>
+                <label for="{{ form.name.id_for_label }}">Заголовок</label>
+            </td>
+            <td valign="top">
+                {{ form.name }}
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <label for="{{ form.club.id_for_label }}">Клуб</label>
+            </td>
+            <td valign="top">
+                {{ form.club }}
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <label for="{{ form.keywords.id_for_label }}">Ключевые слова</label>
+            </td>
+            <td valign="top">
+                {{ form.keywords }}
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <label for="{{ form.content.id_for_label }}">Контент</label>
+            </td>
+            <td valign="top">
+                {{ form.content }}
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <label for="{{ form.cover.id_for_label }}">Обложка</label>
+            </td>
+            <td>
+                {{ form.cover }}
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <label for="{{ form.is_open.id_for_label }}">Доступно всем</label>
+            </td>
+            <td valign="top">
+                {{ form.is_open }}
+            </td>
+        </tr>
+    </table>
+
+        <div class="my-2" style="background-color: rgba(255, 0, 0, 0.1);">
+            {{ form.name.errors }}
+            {{ form.keywords.errors }}
+            {{ form.content.errors }}
+            {{ form.cover.errors }}
+            {{ form.is_open.errors }}
+            {{ form.club.errors }}
+        </div>
+
+        <button type="submit" class="btn btn-primary text-uppercase">Добавить новость</button>
+    </form>
+    <br>
+    <p><i>Если Вы являетесь владельцем клуба, к которому относится новость, то она будет опубликована прямо сейчас.
+        В противном случае материал попадёт на рассмотрении владельцу клуба/администратору сайта, которые примут
+        решение о публикации.
+    </i></p>
+</div>
+
+
+{% endblock content %}

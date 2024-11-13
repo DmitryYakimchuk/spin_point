@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Результаты игр{% endblock %}
+{% block content %}
+  <!-- Заголовок страницы -->
+    <h1 class="mb-4">Клубы</h1>
+
+    <!-- Список клубов -->
+    <div class="mb-4 col-12 col-md-6 col-lg-4">
+        <!-- Пример списка клубов -->
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Настольный Теннисный Центр "Ракета"</h5>
+                <p class="card-text">Прекрасное место для игры в настольный теннис. У нас есть современные залы и профессиональные тренеры.</p>
+                <p class="card-text"><strong>Местоположение:</strong> Город, Улица</p>
+                <p class="card-text"><strong>Рейтинг среди игроков:</strong> 4.7 / 5</p>
+                <a href="#" class="btn btn-primary">Выбрать время для игры</a>
+            </div>
+            <!-- Дополнительная информация о клубе -->
+            <div class="card-footer">
+                <small class="text-muted">Дополнительная информация: Специализируемся на проведении турниров и мастер-классов. Ждем вас!</small>
+            </div>
+        </div>
+
+        <!-- Заглушки для данных -->
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Настольный Теннисный Клуб "Мастер"</h5>
+                <p class="card-text">Лучший выбор для тех, кто стремится стать настоящим мастером настольного тенниса.</p>
+                <p class="card-text"><strong>Местоположение:</strong> Город, Улица</p>
+                <p class="card-text"><strong>Рейтинг среди игроков:</strong> 4.5 / 5</p>
+                <a href="#" class="btn btn-primary">Выбрать время для игры</a>
+            </div>
+            <!-- Дополнительная информация о клубе -->
+            <div class="card-footer">
+                <small class="text-muted">Дополнительная информация: Предоставляем аренду оборудования и индивидуальные тренировки.</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Фильтры для клубов -->
+    <div class="mb-4 col-12 col-md-6 col-lg-4">
+        <form>
+            <div class="mb-3">
+                <label for="clubNameFilter" class="form-label">Фильтр по названию клуба:</label>
+                <input type="text" class="form-control" id="clubNameFilter" placeholder="Введите название клуба">
+            </div>
+
+            <div class="mb-3">
+                <label for="clubSizeFilter" class="form-label">Фильтр по размеру клуба:</label>
+                <select class="form-select" id="clubSizeFilter">
+                    <option value="" selected>Выберите размер клуба</option>
+                    <option value="small">Маленький (до 30 участников)</option>
+                    <option value="medium">Средний (30-50 участников)</option>
+                    <option value="large">Большой (более 50 участников)</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="clubLocationFilter" class="form-label">Фильтр по местоположению клуба:</label>
+                <input type="text" class="form-control" id="clubLocationFilter" placeholder="Введите местоположение">
+            </div>
+
+            <button type="submit" class="btn btn-secondary">Применить фильтры</button>
+        </form>
+    </div>
+{% endblock content %}

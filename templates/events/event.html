@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Поиск спарринг-партнёров{% endblock %}
+{% block content %}
+<div class="container d-flex justify-content-center my-2">
+    <div>
+        {% if user.is_authenticated %}
+            <h3>{{ event.name }}</h3>
+            {% if user in event.participants.all or user in event.allowed_participants.all or event.is_open %}
+                <strong>Инициатор:</strong> {{ event.initiator }}
+                <br>
+                <strong>Статус встречи:</strong> {{ event.get_status_display }}
+                <br>
+                <strong>Открытость/закрытость события:</strong> {{ event.get_is_open_display }}
+                <br>
+                <strong>Количество участников:</strong> {{ event.participants.all|length }}
+                <br>
+                <strong>Участники события:</strong>
+                {% for participant in event.participants.all %}
+                    <span><a href="{% url 'players:player_info' username=participant.username %}">{{ participant }} </a></span>
+                {% endfor %}
+
+                {% if event.start_time %}
+                    <br>
+                    <strong>Начало:</strong> {{ event.start_time }} {{ event.start_date }}
+                {% else %}
+                    <br>
+                    <strong>Начало:</strong> инициатор пока не установил время
+                {% endif %}
+
+                {% if event.finish_time %}
+                    <br>
+                    <strong>Завершение:</strong> {{ event.finish_time }} {{ event.finish_date }}
+                {% else %}
+                    <br>
+                    <strong>Завершение:</strong> инициатор пока не установил время
+                {% endif %}
+
+                {% if event.city %}
+                    <br>
+                    <strong>Город:</strong> {{ event.city }}
+                {% else %}
+                    <br>
+                    <strong>Город:</strong> инициатор пока не добавил город
+                {% endif %}
+
+                {% if event.addr %}
+                    <br>
+                    <strong>Адрес:</strong> {{ event.addr }}
+                {% else %}
+                    <br>
+                    <strong>Адрес:</strong> инициатор пока не добавил информацию по этому пункту
+                {% endif %}
+
+                {% if event.description %}
+                    <br>
+                    <strong>Описание:</strong> {{ event.description }}
+                {% else %}
+                    <br>
+                    <strong>Описание:</strong> инициатор пока не добавил описание встречи
+                {% endif %}
+
+                {% if request.user == event.initiator %}
+                    <br>
+                    <a href="{% url 'events:update_event' pk=event.pk %}" class="btn btn-secondary">Изменить</a>
+                {% elif event.is_open and request.user not in event.participants.all %}
+                    <br>
+                    <a href="{% url 'events:join_the_club' event_pk=event.pk %}" class="btn btn-primary">Участвовать</a>
+                {% endif %}
+
+                <h4 class="mt-2">Комментарии</h4>
+                <form method="post">
+                    {% csrf_token %}
+                    <textarea name="comment" rows="4" cols="50"></textarea><br>
+                    <input type="submit" class="btn btn-primary" value="Добавить комментарий">
+                </form>
+
+                <ul class="list-group mt-3">
+                    {% for comment in event.comments.all %}
+                    <li class="list-group-item">{{ comment.text }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>Эта приватная встреча. Только инициатор может выслать Вам приглашение.</p>
+            {% endif %}
+        {% else %}
+            <p>Чтобы увидеть информацию о встрече, войдите в свой аккаунт.</p>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock content %}

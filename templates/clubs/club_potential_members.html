@@ -1,0 +1,41 @@
+{% extends 'clubs/club_template.html' %}
+{% load static %}
+
+{% block club_page_content %}
+<div class="main-container">
+    <table class="registration-form">
+        <thead>
+          <tr>
+            {% if players %}
+                <th><h4>Заявки на вступление в клуб</h4></th>
+            {% else %}
+                <th><h4>На данный момент заявок на вступление в клуб нет</h4></th>
+            {% endif %}
+          </tr>
+        </thead>
+        <tbody>
+        {% for player in players %}
+          <tr id="to-remove-{{ player.pk }}">
+            <td>
+              <a href="{% url 'players:player_info' username=player.username %}">{{ player.username }}</a> — {{ player.first_name }} {{ player.last_name }}
+            </td>
+            <td>
+              <a href="#" class="btn btn-primary m-1 approve" data-player-pk="{{ player.pk }}" data-club-pk="{{ club.pk }}">Одобрить</a>
+            </td>
+            <td>
+              <a href="#" class="btn btn-secondary m-1 reject" data-player-pk="{{ player.pk }}" data-club-pk="{{ club.pk }}">Отклонить</a>
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% include 'clubs/approve_or_reject_potential_member.html' %}
+{% endblock %}
+
+
+
+
+
+
+

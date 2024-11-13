@@ -1,0 +1,189 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Регистрация{% endblock %}
+{% block javascripts %}
+    <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+    <script>
+            $(document).ready(function(){
+                $('#id_email').on('blur', validate_email);
+                $('#id_username').on('blur', validate_username);
+                $('#id_password1').on('blur', validatePasswords);
+                $('#id_password2').on('blur', validatePasswords);
+
+                function validate_username(){
+                    var username = $('#id_username').val();
+
+                    $.ajax({
+                        method : "GET",
+                        url: '{% url 'players:validate_username' %}',
+                        data: {
+                            'username': username,
+                        },
+                        dataType: 'json',
+                        success: function (data) {
+                            console.log(data);
+                            if (data.username_taken) {
+                                $('#error-username').text(data.username_taken);
+                                $('#btn-register').attr('disabled', 'disabled');
+                            } else if (data.username_invalid) {
+                                $('#error-username').text(data.username_invalid);
+                                $('#btn-register').attr('disabled', 'disabled');
+                            } else {
+                                $('#error-username').text('');
+                            }
+                        },
+                        error: function(data){
+                            console.log(data);
+                        }
+                    });
+                }
+
+                function validate_email(){
+                    var email = $('#id_email').val();
+
+                    $.ajax({
+                        method : "GET",
+                        url: '{% url 'players:validate_email' %}',
+                        data: {
+                            'email': email,
+                        },
+                        dataType: 'json',
+                        success: function (data) {
+                            console.log(data);
+                            if (data.email_taken) {
+                                $('#error-email').text(data.email_taken);
+                                $('#btn-register').attr('disabled', 'disabled');
+                            } else {
+                                $('#error-email').text('');
+                            }
+                        },
+                        error: function(data){
+                            console.log(data);
+                        }
+                    });
+                }
+
+                function validatePasswords() {
+                    var password1 = $('#id_password1').val();
+                    var password2 = $('#id_password2').val();
+
+                    if (password1 !== password2) {
+                        $('#error-password').text('Пароли не совпадают');
+                        $('#btn-register').attr('disabled', 'disabled');
+                        return;
+                    }
+
+                    $.ajax({
+                        method: "GET",
+                        url: '{% url 'players:validate_password_view' %}',
+                        data: {
+                            'password': password1,
+                        },
+                        dataType: 'json',
+                        success: function (data) {
+                            console.log(data);
+                            if (data.password_invalid) {
+                                $('#error-password').text(data.password_invalid);
+                                $('#btn-register').attr('disabled', 'disabled');
+                            } else {
+                                $('#error-password').text('');
+                                $('#btn-register').removeAttr('disabled');
+                            }
+                        },
+                        error: function(data){
+                            console.log(data);
+                        }
+                    });
+                }
+            });
+    </script>
+{% endblock %}
+{% block content %}
+
+
+<div class="mb-4 col-12 col-md-6 col-lg-4">
+    <div>
+        <div class="d-flex">
+            <h2 class="mb-2">Регистрация</h2>
+        </div>
+        <form method="post" action="{% url 'players:registration' %}">
+            {% csrf_token %}
+
+            <table class="registration-form">
+              <tr>
+                <td>
+                  <label for="{{ form.first_name.id_for_label }}">Имя:</label>
+                </td>
+                <td>
+                  {{ form.first_name }}
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <label for="{{ form.last_name.id_for_label }}">Фамилия:</label>
+                </td>
+                <td>
+                  {{ form.last_name }}
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <label for="{{ form.username.id_for_label }}">Никнейм:</label>
+                </td>
+                <td>
+                  {{ form.username }}
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <label for="{{ form.email.id_for_label }}">Email:</label>
+                </td>
+                <td>
+                  {{ form.email }}
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <label for="{{ form.password1.id_for_label }}">Пароль:</label>
+                </td>
+                <td>
+                  {{ form.password1 }}
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <label for="{{ form.password2.id_for_label }}">Подтвердите пароль:</label>
+                </td>
+                <td>
+                  {{ form.password2 }}
+                </td>
+              </tr>
+            </table>
+          <p>
+            Нажимая «Зарегистрироваться», вы принимаете
+            <a href="#">пользовательское соглашение и политику конфиденциальности</a>
+          </p>
+
+          <div class="my-2" style="background-color: rgba(255, 0, 0, 0.1);">
+              <p id="error-email"></p>
+              <p id="error-username"></p>
+              <p id="error-password"></p>
+              {{ form.username.errors }}
+              {{ form.first_name.errors }}
+              {{ form.last_name.errors }}
+              {{ form.email.errors }}
+              {{ form.password1.errors }}
+              {{ form.password2.errors }}
+          </div>
+
+            <button type="submit" class="btn btn-primary text-uppercase my-1" id="btn-register">Зарегистрироваться</button>
+          </form>
+    </div>
+</div>
+
+{% endblock content%}

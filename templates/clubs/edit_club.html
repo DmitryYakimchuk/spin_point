@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+
+<h2>{{ title }}</h2>
+<div class="mb-4 col-12 col-md-6 col-lg-4">
+    <form method="POST" action="{% url 'clubs:edit_club' club.pk %}" enctype="multipart/form-data">
+       {% csrf_token %}
+       <table class="registration-form">
+
+        <tr>
+            <td>
+                <label for="{{ form.name.id_for_label }}">Имя</label>
+            </td>
+            <td valign="top">
+                {{ form.name }}
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <label for="{{ form.is_open.id_for_label }}">Статус</label>
+            </td>
+            <td valign="top">
+                {{ form.is_open }}
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <label for="{{ form.city.id_for_label }}">Город</label>
+            </td>
+            <td valign="top">
+                {{ form.city }}
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <label for="{{ form.addr.id_for_label }}">Адрес</label>
+            </td>
+            <td valign="top">
+                {{ form.addr }}
+            </td>
+        </tr>
+
+        <tr>
+            <td class="align-top">
+                <label for="{{ form.description.id_for_label }}">Описание</label>
+            </td>
+            <td valign="top">
+                {{ form.description }}
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <label for="{{ form.website.id_for_label }}">Сайт</label>
+            </td>
+            <td valign="top">
+                {{ form.website }}
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <label for="{{ form.telegram.id_for_label }}">Telegram</label>
+            </td>
+            <td valign="top">
+                {{ form.telegram }}
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <label for="{{ form.logo.id_for_label }}">Логотип</label>
+            </td>
+            <td>
+                {{ form.logo }}
+            </td>
+        </tr>
+    </table>
+
+        <div class="my-2" style="background-color: rgba(255, 0, 0, 0.1);">
+            {{ form.name.errors }}
+            {{ form.is_open.errors }}
+            {{ form.city.errors }}
+            {{ form.addr.errors }}
+            {{ form.description.errors }}
+            {{ form.website.errors }}
+            {{ form.logo.errors }}
+            {{ form.telegram.errors }}
+        </div>
+
+        <button type="submit" class="btn btn-secondary text-uppercase">Изменить</button>
+    </form>
+</div>
+
+
+{% endblock content %}

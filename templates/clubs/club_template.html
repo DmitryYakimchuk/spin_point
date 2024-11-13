@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+
+<!-- Дополнительные стили -->
+<link rel="stylesheet" href="{% static 'css/clubs.css' %}">
+
+{% if club.is_open or user in club.members.all %}
+    {% include "clubs/club_menu.html"  %}
+    <!-- Основной контент страницы -->
+<div class="container">
+
+    {% block club_page_content %}
+    {% endblock %}
+
+</div>
+
+{% else %}
+    {% if user.is_authenticated %}
+        <p><i>Доступ в клуб ограничен. Чтобы открыть страницу клуба вы должны быть его членом.
+        <a href="{% url 'clubs:add_potential_members' pk=club.pk %}" class="">Подать заявку</a> на вступление.</i></p>
+    {% else %}
+        <p><i>Доступ в клуб ограничен. Чтобы открыть страницу клуба вы должны быть его членом.
+        Для этого необходимо сначала <a href="{% url 'players:login' %}">войти</a> на сайт, а затем подать заявку на вступление.</i></p>
+    {% endif %}
+{% endif %}
+
+{% endblock content %}

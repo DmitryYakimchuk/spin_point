@@ -1,0 +1,83 @@
+{% extends 'clubs/club_template.html' %}
+{% load static %}
+
+{% block javascripts %}
+  {% include 'news/news_like.html' %}
+{% endblock %}
+
+{% block club_page_content %}
+  {% if news %}
+    <div class="container mt-2">
+      <div class="card mb-4">
+        {% if news.cover %}
+          <img src="{{ news.cover.url }}" class="card-img-top" alt="{{ news.name }}" style="max-height: 400px; object-fit: cover;">
+        {% endif %}
+        <div class="card-body">
+          <h3 class="card-title">{{ news.name }}</h3>
+          <p class="card-text">
+            <small class="text-muted">{{ news.date_time }}</small>
+            <small class="text-muted">Автор: <a href="{% url 'players:player_info' username=news.author.username %}">{{ news.author.username }}</a></small>
+            {% if news.club %}
+              {% if news.club.is_open or request.user in news.club.members.all %}
+                <small class="text-muted">Опубликовано от имени клуба "<a href="{% url 'clubs:club' news.club.pk %}">{{ news.club.name }}"</a>.</small>
+              {% else %}
+                <small class="text-muted">Опубликовано от имени клуба "{{ news.club.name }}"</small>
+              {% endif %}
+            {% endif %}
+          </p>
+          <p class="card-text">{{ news.content }}</p>
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex">
+              {% if user.is_authenticated %}
+                {% if news.liker %}
+                  <img src="{% static 'img/like_pressed.svg' %}" class="news_like_view_change me-2" width="20px" data-news-pk="{{ news.pk }}">
+                {% else %}
+                  <img src="{% static 'img/like_unpressed.svg' %}" class="news_like_view_change me-2" width="20px" data-news-pk="{{ news.pk }}">
+                {% endif %}
+              {% else %}
+                <img src="{% static 'img/like_unpressed.svg' %}" class="me-2" width="20px">
+              {% endif %}
+              <span class="text-muted" id="news_{{ news.pk }}_like_count">{{ news.newslike_news.count }}</span>
+              <small class="text-muted ms-2">Просмотры: {{ news.views_count }}</small>
+              <small class="text-muted ms-2">Комментарии: {{ news.newscomment_news.count }}</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <h4 class="mt-4 mb-3">Комментарии</h4>
+      {% if page_obj %}
+        {% for comment in page_obj %}
+          <div class="card mb-2">
+            <div class="card-body">
+              <p class="card-text">
+                <small class="text-muted">Автор: <a href="{% url 'players:player_info' username=comment.commenter.username %}">{{ comment.commenter.username }}</a></small>
+                <small class="text-muted">{{ comment.created_at }}</small>
+              </p>
+              <p>{{ comment.comment }}</p>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p class="text-muted">Пока нет комментариев.</p>
+      {% endif %}
+      {% include 'paginator.html' %}
+      {% if user.is_authenticated %}
+        <h4 class="mt-4 mb-3">Добавить комментарий</h4>
+        <form method="post">
+          {% csrf_token %}
+          <div class="mb-3">
+            {{ form.comment }}
+            {% if form.comment.errors %}
+              <div class="text-danger">{{ form.comment.errors }}</div>
+            {% endif %}
+          </div>
+          <button type="submit" class="btn btn-primary">Отправить</button>
+        </form>
+      {% else %}
+        <p class="mt-4 mb-3">Чтобы оставить комментарий, <a href="{% url 'players:login' %}">войдите</a> под своей учётной записью.</p>
+      {% endif %}
+    </div>
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+
+<div class="my-2 row">
+    <div class="col-8 col-md-4">
+        <h2>Выбрать клубы</h2>
+        {% if player_participant_in_club %}
+            <form method="get" action="{% url 'clubs:participation_in_clubs' %}">
+        {% elif players_clubs %}
+            <form method="get" action="{% url 'clubs:my_clubs' %}">
+        {% else %}
+            <form method="get" action="{% url 'clubs:index' %}">
+        {% endif %}
+            <table class="registration-form">
+                <tr>
+                    <div style="display: flex; align-items: center;">
+                        <label for="{{ filter_form.name.id_for_label }}">Название:</label>
+                         {{ filter_form.name }}
+                    </div>
+                </tr>
+
+                <tr>
+                    <div style="display: flex; align-items: center;">
+                        <label for="{{ filter_form.min_participants.id_for_label }}">Участников от</label>
+                         {{ filter_form.min_participants }}
+                        <label for="{{ form.max_participants.id_for_label }}">до</label>
+                        {{ filter_form.max_participants }}
+                    </div>
+                </tr>
+
+                <tr>
+                    <td>
+                        <label for="{{ filter_form.has_logo.id_for_label }}">Логотип:</label>
+                    </td>
+                    <td valign="top">
+                        {{ filter_form.has_logo }}
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <label for="{{ filter_form.is_open.id_for_label }}">Статус:</label>
+                    </td>
+                    <td valign="top">
+                        {{ filter_form.is_open }}
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <label for="{{ filter_form.city.id_for_label }}">Город:</label>
+                    </td>
+                    <td valign="top">
+                        {{ filter_form.city }}
+                    </td>
+                </tr>
+            </table>
+
+            <div class="my-2" style="background-color: rgba(255, 0, 0, 0.1);">
+                {{ filter_form.name.errors }}
+                {{ filter_form.min_participants.errors }}
+                {{ filter_form.max_participants.errors }}
+                {{ filter_form.has_logo.errors }}
+                {{ filter_form.is_open.errors }}
+                {{ filter_form.city.errors }}
+            </div>
+
+            <button type="submit" class="btn btn-secondary">Применить фильтры</button>
+        </form>
+    </div>
+
+    <div class="col-12 col-md-8 my-2">
+        {% if clubs %}
+            <h6>Всего клубов: {{ clubs_count }}</h6>
+            {% for club in clubs %}
+                <div class="mb-4">
+                    {% include "clubs/club_card.html"  %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>Во Вашему запросу не найдено ни одного клуба.</p>
+        {% endif %}
+    </div>
+</div>
+
+{% include "paginator_with_filter.html"  %}
+
+{% endblock content %}

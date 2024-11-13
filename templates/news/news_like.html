@@ -1,0 +1,38 @@
+{% load static %}
+<script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+<script>
+        $(document).ready(function(){
+            $('.news_like_view_change').on('click', change_like_view);
+
+            function change_like_view(){
+                var $likeImage = $(this);
+                var news_pk = $likeImage.data('news-pk');
+                var news_like_count_element = $('#news_' + news_pk + '_like_count');
+                var news_like_count = parseInt(news_like_count_element.text());
+                var delete_like = $likeImage.attr('src').includes('like_pressed.svg') ? 1 : 0;
+
+                $.ajax({
+                    method : "GET",
+                    url: '/like_news/' + news_pk + '/',
+                    data: {
+                        'news_like_count': news_like_count,
+                        'delete_like': delete_like,
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log(data);
+                        if (data.delete_like) {
+                            $likeImage.attr('src', '{% static 'img/like_unpressed.svg' %}');
+                            news_like_count_element.text(data.news_like_count);
+                        } else {
+                            $likeImage.attr('src', '{% static 'img/like_pressed.svg' %}');
+                            news_like_count_element.text(data.news_like_count);
+                        }
+                    },
+                    error: function(data){
+                        console.log(data);
+                    }
+                });
+            }
+        });
+</script>

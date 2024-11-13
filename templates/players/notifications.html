@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} {{ title }} {% endblock %}
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Notification' navigation menu -->
+        <nav class="col-md-3 col-lg-2 d-md-block bg-white sidebar mt-2">
+            <div class="position-sticky">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a href="{% url 'players:notifications' %}" class="btn btn-info text-uppercase text-white m-1 d-flex justify-content-between w-100">
+                            <span>Все</span>
+                            <span class="badge bg-light text-dark">{{ unread_count }}</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'players:invitation_notifications' %}" class="btn btn-info text-uppercase text-white m-1 d-flex justify-content-between w-100">
+                            <span>Приглашения</span>
+                            <span class="badge bg-light text-dark">{{ invitation_content_count }}</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'players:event_notifications' %}" class="btn btn-info text-uppercase text-white m-1 d-flex justify-content-between w-100">
+                            <span>События</span>
+                            <span class="badge bg-light text-dark">{{ event_content_count }}</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="btn btn-info text-uppercase text-white m-1 d-flex justify-content-between w-100">
+                            <span>Турниры</span>
+                            <span class="badge bg-light text-dark">-</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'players:clubs_notifications' %}" class="btn btn-info text-uppercase text-white m-1 d-flex justify-content-between w-100">
+                            <span>Клубы</span>
+                            <span class="badge bg-light text-dark">{{ club_notification_count }}</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="btn btn-info text-uppercase text-white m-1 d-flex justify-content-between w-100">
+                            <span>Игры</span>
+                            <span class="badge bg-light text-dark">-</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="btn btn-info text-uppercase text-white m-1 d-flex justify-content-between w-100">
+                            <span>Рейтинг</span>
+                            <span class="badge bg-light text-dark">-</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'players:news_notifications' %}" class="btn btn-info text-uppercase text-white m-1 d-flex justify-content-between w-100">
+                            <span>Новости</span>
+                            <span class="badge bg-light text-dark">{{ news_notification_count }}</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 border-bottom">
+                <h1 class="h2">{{ title }}</h1>
+            </div>
+            <!-- Notification list -->
+            <ul class="list-group list-group-flush mb-2">
+                {% for notification in custom_notifications %}
+                    {% if notification.unread %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center" id="{{ notification.pk }}" data-action="{{ notification.action }}" data-notification-pk="{{ notification.pk }}"  style="background-color:#ECF6FE">
+                    {% else %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center bg-light" id="{{ notification.pk }}" data-action="{{ notification.action }}" data-notification-pk="{{ notification.pk }}">
+                    {% endif %}
+                        <div>
+                            <span class="badge bg-secondary">{{ notification.timestamp }}</span>
+                            {% if notification.target.invitation %}
+                                <span>{{ notification.verb }}</span>
+                                <a href="{% url 'players:player_info' username=notification.actor.username %}">{{ notification.actor.username }}</a>.
+                                {% if notification.target.status == 'active' %}
+                                    <span id="result-for-reaction-to-invitation-{{ notification.target.pk }}" data-invitation-pk="{{ notification.target.pk }}" data-player-pk="{{ notification.actor.pk }}">
+                                        Вы можете <a href="{% url 'events:accept_invitation' invitation_pk=notification.target.pk %}">согласиться на встречу</a> и договорить о подробностях, или <a href="#" class="reject-invitation">отказаться</a>.
+                                        <div id="rejection-reason-input" style="display: none;" class="rejection-form">
+                                            <input type="text" id="rejection-reason" class="form-control my-2" placeholder="Причина (необязательно)">
+                                            <button class="btn btn-secondary send-rejection">Отказать</button>
+                                        </div>
+                                    </span>
+                                {% elif notification.target.status == 'rejected' %}
+                                    {% if notification.description %}
+                                        <span>Причина: "{{ notification.description }}".</span>
+                                    {% endif %}
+                                {% endif %}
+                            {% endif %}
+
+                            {% if notification.target.participants %}
+                                <a href="{% url 'players:player_info' username=notification.actor.username %}">{{ notification.actor.username }}</a>
+                                    <span id="result-for-reaction-to-invitation-{{ notification.target.pk }}" data-invitation-pk="{{ notification.target.pk }}" data-player-pk="{{ notification.actor.pk }}">
+                                        {{ notification.verb }} <a href="{% url 'events:event' event_pk=notification.target.pk %}">{{ notification.target.name }}</a>.
+                                    </span>
+                            {% endif %}
+                            {% if notification.target.owner %}
+                                    <span id="result-for-reaction-to-invitation-{{ notification.target.pk }}" data-invitation-pk="{{ notification.target.pk }}" data-player-pk="{{ notification.actor.pk }}">
+                                        {{ notification.verb }}.
+                                    </span>
+                            {% endif %}
+                            {% if notification.target.content %}
+                                    <span id="result-for-reaction-to-invitation-{{ notification.target.pk }}" data-invitation-pk="{{ notification.target.pk }}" data-player-pk="{{ notification.actor.pk }}">
+                                        {{ notification.verb }}.
+                                    </span>
+                            {% endif %}
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close" onclick="deleteNotification({{ notification.id }})"></button>
+                    </li>
+                {% endfor %}
+            </ul>
+            {% include "paginator_with_filter.html"  %}
+        </main>
+    </div>
+</div>
+
+{% include 'players/ajax_notifications_in_notifications.html' %}
+
+{% endblock content%}

@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} {{ player.username }} {% endblock %}
+{% block content %}
+<div class="mb-4 col-12 col-md-6 col-lg-4">
+    <div>
+        <div class="d-flex justify-content-center">
+            <h1 class="mb-2">{{ player.username }}</h1>
+        </div>
+        <div class="d-flex justify-content-center">
+            <img class="mb-4" src="{% if player.photo %}{{ player.photo.url }}
+                                  {% else %}{% static 'img/default/ava_default.png' %}
+                                  {% endif %}" width="150px" height="150px">
+        </div>
+        <table class="table table-striped">
+            <tbody>
+
+            {% if player.first_name %}
+            <tr>
+                <td class="fw-bold align-middle">Имя</td>
+                <td>{{ player.first_name }}</td>
+            </tr>
+            {% endif %}
+
+            {% if player.last_name %}
+            <tr>
+                <td class="fw-bold align-middle">Фамилия</td>
+                <td>{{ player.last_name }}</td>
+            </tr>
+            {% endif %}
+
+            <tr>
+                <td class="fw-bold align-middle">Позиция в рейтинге</td>
+                <td>{{ player_last_position }}</td>
+            </tr>
+
+            <tr>
+                <td class="fw-bold align-middle">Рейтинг</td>
+                <td>{{ player_last_rating }}</td>
+            </tr>
+
+            <tr>
+                <td class="fw-bold align-middle">На сайте с</td>
+                <td>{{ player.date_joined }}</td>
+            </tr>
+
+            {% if player.about %}
+            <tr>
+                <td class="fw-bold align-middle">Обо мне</td>
+                <td>{{ player.about }}</td>
+            </tr>
+            {% endif %}
+
+            {% if player.city %}
+            <tr>
+                <td class="fw-bold align-middle">Страна</td>
+                <td>{{ player.city.country.name }}</td>
+            </tr>
+            <tr>
+                <td class="fw-bold align-middle">Город</td>
+                <td>{{ player.city.name }}</td>
+            </tr>
+            {% endif %}
+
+            {% if player.role %}
+            <tr>
+                <td class="fw-bold align-middle">Роль</td>
+                <td>{{ player.get_role_display }}</td>
+            </tr>
+            {% endif %}
+
+            {% if player.skill_level %}
+            <tr>
+                <td class="fw-bold align-middle">Уровень игры</td>
+                <td>{{ player.get_skill_level_display }}</td>
+            </tr>
+            {% endif %}
+
+            {% if player.playstyle %}
+            <tr>
+                <td class="fw-bold align-middle">Стиль игры</td>
+                <td>{{ player.get_playstyle_display }}</td>
+            </tr>
+            {% endif %}
+
+            <tr>
+                <td class="fw-bold align-middle">Игровая рука</td>
+                <td>{{ player.get_hand_display }}</td>
+            </tr>
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!--Отображение графика рейтинга-->
+<div class="mb-4 mt-4 col-12 col-md-6 col-lg-4 d-flex justify-content-center">
+    {% include 'players/graphical_rating.html' %}
+</div>
+
+{% endblock content%}

@@ -1,0 +1,44 @@
+{% extends 'clubs/club_template.html' %}
+{% load static %}
+
+{% block club_page_content %}
+<div class="main-container">
+    <table class="registration-form">
+        <thead>
+          <tr>
+            {% if news %}
+                <th><h4>Новости</h4></th>
+            {% else %}
+                <th><h4>На данный момент предложенных новостей нет</h4></th>
+            {% endif %}
+          </tr>
+        </thead>
+        <tbody>
+        {% for item in news %}
+          <tr id="to-remove-{{ item.pk }}">
+            <td>
+                <h5>{{ item.name }}</h5>
+            </td>
+              <td>
+                  <a class="mx-5" href="{% url 'clubs:potential_club_news' club_pk=club.pk pk=item.pk %}">Читать</a>
+              </td>
+            <td>
+              <a href="#" class="btn btn-primary m-1 approve" data-news-pk="{{ item.pk }}" data-club-pk="{{ club.pk }}">Принять</a>
+            </td>
+            <td>
+              <a href="#" class="btn btn-secondary m-1 reject" data-news-pk="{{ item.pk }}" data-club-pk="{{ club.pk }}">Отклонить</a>
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% include 'clubs/approve_or_reject_potential_news.html' %}
+{% endblock %}
+
+
+
+
+
+
+

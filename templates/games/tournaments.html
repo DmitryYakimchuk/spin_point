@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Турниры{% endblock %}
+{% block content %}
+    <!-- Заголовок страницы -->
+    <h1 class="mb-4">Турниры</h1>
+
+    <!-- Список текущих турниров -->
+    <div class="mb-4 col-12 col-md-6 col-lg-4">
+        <h4>Текущие турниры</h4>
+        <!-- Пример списка текущих турниров -->
+        <ul class="list-group">
+            <li class="list-group-item">Турнир "Летний Кубок" - 25 участников</li>
+            <li class="list-group-item">Турнир "Осенний Чемпионат" - 32 участника</li>
+            <!-- Заглушки для данных -->
+            <li class="list-group-item">Турнир "Зимний Кубок" - 20 участников</li>
+            <li class="list-group-item">Турнир "Весенний Чемпионат" - 28 участников</li>
+        </ul>
+    </div>
+
+    <!-- Фильтры для турниров -->
+    <div class="mb-4 col-12 col-md-6 col-lg-4">
+        <form>
+            <div class="mb-3">
+                <label for="dateFilter" class="form-label">Дата:</label>
+                <input type="date" class="form-control" id="dateFilter">
+            </div>
+
+            <div class="mb-3">
+                <label for="locationFilter" class="form-label">Город:</label>
+                <input type="text" class="form-control" id="locationFilter" placeholder="Введите местоположение">
+            </div>
+
+            <div class="mb-3">
+                <label for="participantFilter" class="form-label">Количество участников:</label>
+                <input type="number" class="form-control" id="participantFilter" min="0">
+            </div>
+
+            <button type="submit" class="btn btn-secondary">Применить фильтры</button>
+        </form>
+    </div>
+{% endblock content %}

@@ -1,0 +1,29 @@
+{% load static %}
+<script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+<script>
+    $(document).ready(function(){
+        $('.add-to-potential-members').click(function(e){
+            e.preventDefault();
+            var button = $(this); // сохраняем ссылку на кнопку
+            var club_pk = button.data('club-pk');
+            $.ajax({
+                type: 'POST',
+                url: '/clubs/add_potential_members/' + club_pk + '/',
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                },
+                success: function(response){
+                    if (response.success) {
+                        $('#will-change-' + club_pk).html('Вы подали заявку на вступление в клуб. Ожидайте решения владельца клуба.');
+                        button.remove(); // удаляем кнопку после успешного запроса
+                    } else {
+                        console.error("Error occurred:", response.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("AJAX error occurred:", xhr.responseText);
+                }
+            });
+        });
+    });
+</script>

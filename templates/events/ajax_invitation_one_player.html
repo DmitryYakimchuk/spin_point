@@ -1,0 +1,39 @@
+{% load static %}
+<script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+<script>
+$(document).ready(function(){
+    $('.invite-player').click(function(e){
+        e.preventDefault();
+        var button = $(this);
+        var player_pk = button.data('player-pk');
+        var container = button.closest('.card-body');
+
+        // Проверяем, был ли уже отправлен запрос для данного игрока
+        if (container.data('request-sent')) {
+            return; // Если запрос уже был отправлен, выходим из функции
+        }
+
+        // Устанавливаем флаг, что запрос отправлен
+        container.data('request-sent', true);
+
+        $.ajax({
+            url: button.attr('href'),
+            type: 'POST',
+            data: { 'csrfmiddlewaretoken': '{{ csrf_token }}' },
+            success: function(response){
+                if (response.success) {
+                    container.find('.invite-status').html('Приглашение отправлено');
+                    button.remove();
+                } else {
+                    var message = 'Сегодня этого игрока Вы уже пригласили. Ожидайте его ответа.';
+                    container.find('.invite-status').html('<span class="text-danger">' + message + '</span>');
+                    button.remove();
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("AJAX error occurred:", xhr.responseText);
+            }
+        });
+    });
+});
+</script>

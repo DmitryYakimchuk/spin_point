@@ -1,0 +1,44 @@
+{% load static %}
+<script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+
+<script>
+    $('.approve').click(function(e) {
+      e.preventDefault();
+      var player_pk = $(this).data('player-pk');
+      var club_pk = $(this).data('club-pk');
+      var url = `/clubs/to_real_members/${club_pk}/${player_pk}/`;
+      $.ajax({
+        type: 'POST',
+        url: url,
+        data: {
+          'csrfmiddlewaretoken': '{{ csrf_token }}'
+        },
+        success: function(response) {
+          $('#to-remove-' + player_pk).remove();
+        },
+        error: function(xhr, status, error) {
+          console.error(xhr.responseText);
+        }
+      });
+    });
+
+    $('.reject').click(function(e) {
+      e.preventDefault();
+      var player_pk = $(this).data('player-pk');
+      var club_pk = $(this).data('club-pk');
+      var url = `/clubs/reject_potential_member/${club_pk}/${player_pk}/`;
+      $.ajax({
+        type: 'POST',
+        url: url,
+        data: {
+          'csrfmiddlewaretoken': '{{ csrf_token }}'
+        },
+        success: function(response) {
+          $('#to-remove-' + player_pk).remove();
+        },
+        error: function(xhr, status, error) {
+          console.error(xhr.responseText);
+        }
+      });
+    });
+</script>

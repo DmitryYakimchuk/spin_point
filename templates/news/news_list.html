@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ title }}{% endblock %}
+{% block javascripts %}{% include 'news/news_like.html' %}{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+  {% for item in news %}
+    <div class="card mb-4">
+      <div class="card-body">
+        {% if item.cover %}
+          <img src="{{ item.cover.url }}" class="card-img-top mb-3" alt="{{ item.name }}" style="max-height: 300px; object-fit: cover;">
+        {% endif %}
+        <h5 class="card-title">{{ item.name }}</h5>
+        <p class="card-text">
+          <small class="text-muted">{{ item.date_time }}</small>
+          <small class="text-muted">Автор: <a href="{% url 'players:player_info' username=item.author.username %}">{{ item.author.username }}</a></small>
+          {% if item.club %}
+            {% if item.club.is_open or request.user in item.club.members.all %}
+              <small class="text-muted">Опубликовано от имени клуба "<a href="{% url 'clubs:club' item.club.pk %}">{{ item.club.name }}"</a></small>
+            {% else %}
+              <small class="text-muted">Опубликовано от имени клуба "{{ item.club.name }}"</small>
+            {% endif %}
+          {% endif %}
+        </p>
+        <p class="card-text">{{ item.content|truncatechars_html:500 }}</p>
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="d-flex">
+            {% if user.is_authenticated %}
+              {% if item.liker %}
+                <img src="{% static 'img/like_pressed.svg' %}" class="news_like_view_change me-2" width="20px" data-news-pk="{{ item.pk }}">
+              {% else %}
+                <img src="{% static 'img/like_unpressed.svg' %}" class="news_like_view_change me-2" width="20px" data-news-pk="{{ item.pk }}">
+              {% endif %}
+            {% else %}
+              <img src="{% static 'img/like_unpressed.svg' %}" class="me-2" width="20px">
+            {% endif %}
+            <span class="text-muted" id="news_{{ item.pk }}_like_count">{{ item.newslike_news.count }}</span>
+            <small class="text-muted ms-2">Просмотры: {{ item.views_count }}</small>
+            <small class="text-muted ms-2">Комментарии: {{ item.newscomment_news.count }}</small>
+          </div>
+          <a href="{% url 'news:get_the_open_news' pk=item.pk %}" class="btn btn-primary">Читать далее</a>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+  {% include 'paginator.html' %}
+</div>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+

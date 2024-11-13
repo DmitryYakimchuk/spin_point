@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Поиск спарринг-партнёров{% endblock %}
+{% block content %}
+<!-- Форма для поиска партнёра -->
+{% include 'players/players_filter.html' %}
+
+    <!-- Список подходящих игроков -->
+    <div class="mb-4 col-12 col-md-6 col-lg-8">
+        {% if players_count %}
+            <h4>Подходящие игроки: {{ players_count }}</h4>
+        {% else %}
+            <h4>Подходящий игроков нет или Вы уже всех пригласили</h4>
+            <p>Каждого игрока можно пригласить на одиночную встречу только один раз за день.</p>
+        {% endif %}
+        <!-- Карточка игрока -->
+        {% for player in page_obj %}
+            {% if player.searchable %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title"><a href="{% url 'players:player_info' username=player.username %}">{{ player.username }}</a></h5>
+                        {% if player.first_name %}
+                            <h5 class="card-title">{{ player.first_name }}
+                                {% if player.last_name %}
+                                    {{ player.last_name }}
+                                {% endif %}
+                            </h5>
+                        {% endif %}
+                        <p class="card-text"><strong>Рейтинг:</strong> {{ player.latest_rating }}</p>
+                        {% if player.sex %}
+                            <p class="card-text"><strong>Пол:</strong> {{ player.get_sex_display }}</p>
+                        {% endif %}
+                        {% if player.age %}
+                            <p class="card-text"><strong>Возраст:</strong> {{ player.age }}</p>
+                        {% endif %}
+                        {% if player.role %}
+                            <p class="card-text"><strong>Роль:</strong> {{ player.get_role_display }}</p>
+                        {% endif %}
+                        {% if player.skill_level %}
+                            <p class="card-text"><strong>Уровень игры:</strong> {{ player.get_skill_level_display }}</p>
+                        {% endif %}
+                        {% if player.playstyle %}
+                            <p class="card-text"><strong>Стиль игры:</strong> {{ player.get_playstyle_display }}</p>
+                        {% endif %}
+                        {% if player.hand %}
+                            <p class="card-text"><strong>Игровая рука:</strong> {{ player.get_hand_display }}</p>
+                        {% endif %}
+                        {% if player.city %}
+                            <p class="card-text"><strong>Город:</strong> {{ player.city.name }}</p>
+                        {% endif %}
+                        {% include 'events/ajax_invitation_one_player.html' %}
+                        <p class="invite-status"><i id="will-change-{{ player.pk }}"></i></p> <!-- Изменил идентификатор на класс -->
+                        <a href="{% url 'events:invite_to_play' player_pk=player.pk %}" class="btn btn-primary invite-player text-uppercase m-1" data-player-pk="{{ player.pk }}">Пригласить поиграть</a>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+        {% include 'paginator_with_filter.html' %}
+    </div>
+
+{% endblock content %}

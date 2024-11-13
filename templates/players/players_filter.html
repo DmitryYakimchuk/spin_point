@@ -1,0 +1,125 @@
+<div class="mb-4 col-12 col-md-6 col-lg-4">
+    <h4>Параметры поиска</h4>
+    {% if rating_page %}
+    <form method="GET" action="{% url 'players:index' %}">
+    {% elif search_partner_page %}
+    <form method="GET" action="{% url 'events:search_partner' %}">
+    {% endif %}
+       <table class="registration-form">
+        <tr>
+            <div style="display: flex; align-items: center;">
+                <label for="{{ form.username.id_for_label }}">Игрок:</label>
+                 {{ form.username }}
+            </div>
+
+        </tr>
+
+        <tr>
+            <div style="display: flex; align-items: center;">
+                <label for="{{ form.min_rating.id_for_label }}">Рейтинг: от</label>
+                 {{ form.min_rating }}
+                <label for="{{ form.max_rating.id_for_label }}">до</label>
+                {{ form.max_rating }}
+            </div>
+        </tr>
+
+        <tr>
+            <div style="display: flex; align-items: center;">
+                <label for="{{ form.min_rating.id_for_label }}">Возраст: от</label>
+                 {{ form.min_age }}
+                <label for="{{ form.max_rating.id_for_label }}">до</label>
+                {{ form.max_age }}
+            </div>
+        </tr>
+
+        <tr>
+            <td>
+                <label for="{{ form.has_photo.id_for_label }}">Фото:</label>
+            </td>
+            <td valign="top">
+                {{ form.has_photo }}
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <label for="{{ form.sex.id_for_label }}">Пол:</label>
+            </td>
+            <td valign="top">
+                {{ form.sex }}
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <label for="{{ form.city.id_for_label }}">Город:</label>
+            </td>
+            <td valign="top">
+                {{ form.city }}
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <label for="{{ form.club.id_for_label }}">Клуб:</label>
+            </td>
+            <td valign="top">
+                {{ form.club }}
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <label for="{{ form.role.id_for_label }}">Роль:</label>
+            </td>
+            <td valign="top">
+                {{ form.role }}
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <label for="{{ form.skill_level.id_for_label }}">Уровень игры:</label>
+            </td>
+            <td valign="top">
+                {{ form.skill_level }}
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <label for="{{ form.playstyle.id_for_label }}">Стиль игры:</label>
+            </td>
+            <td valign="top">
+                {{ form.playstyle }}
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <label for="{{ form.hand.id_for_label }}">Игровая рука:</label>
+            </td>
+            <td>
+                {{ form.hand }}
+            </td>
+        </tr>
+    </table>
+
+        <div class="my-2" style="background-color: rgba(255, 0, 0, 0.1);">
+            {{ form.username.errors }}
+            {{ form.photo.errors }}
+            {{ form.min_rating.errors }}
+            {{ form.max_rating.errors }}
+            {{ form.sex.errors }}
+            {{ form.min_age.errors }}
+            {{ form.max_age.errors }}
+            {{ form.city.errors }}
+            {{ form.role.errors }}
+            {{ form.skill_level.errors }}
+            {{ form.playstyle.errors }}
+            {{ form.has_hand.errors }}
+        </div>
+
+        <button type="submit" class="btn btn-secondary">Применить фильтры</button>
+    </form>
+</div>

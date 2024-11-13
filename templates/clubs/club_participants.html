@@ -1,0 +1,34 @@
+{% extends 'clubs/club_template.html' %}
+{% load static %}
+
+{% block club_page_content %}
+    <div class="main-container">
+        <div class="card">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Игрок</th>
+                        <th scope="col">Рейтинг</th>
+                        <th scope="col" class="text-center">Позиция в клубе</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for player in players %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter|add:start }}</th>
+                        <td>
+                            <a class="navbar-footer nav-link" href="{% url 'players:player_info' player.username %}">{{ player.username }}</a>
+                        </td>
+                        <td>{{ player.latest_rating }}</td>
+                        <td class="text-center">{{ player.position }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+<div class="mt-2">
+    {% include 'paginator.html' %}
+</div>
+{% endblock club_page_content %}

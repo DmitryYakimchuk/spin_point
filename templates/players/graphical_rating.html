@@ -1,0 +1,58 @@
+<!--Plot graphical rating-->
+
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/morris.css' %}">
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/raphael-min.js' %}"></script>
+<script src="{% static 'js/morris.min.js' %}"></script>
+
+<div class="container justify-content-center text-left">
+
+    {% if player %}
+        <h5 class="justify-content-center">Динамика рейтинга {{ player.username }}</h5>
+    {% else %}
+        <h5 class="justify-content-center">Динамика рейтинга</h5>
+    {% endif %}
+
+<!--Контейнер, в котором отрисовываем график и устанавливаем его размеры-->
+    <div id="graphdiv" style="width:500px; height:250px;"></div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Асинхронная загрузка данных и построение графика для личного кабинета или для любого другого игрока
+            {% if player %}
+                fetch("{% url 'players:plot_rating_data' username=player.username %}")
+            {% else %}
+                fetch("{% url 'players:plot_rating_data' username=user.username %}")
+            {% endif %}
+                .then(response => response.json())
+                .then(data => {
+                    const graphData = data.data.map(entry => ({
+                        date: entry[0],  // значение по оси x (Дата) как объект Date
+                        value: parseInt(entry[1]) || 0  // значение по оси y (Рейтинг) преобразованное в число, с учетом null
+                    }));
+                    console.log(graphData);
+                    new Morris.Line({
+                        // ID элемента, в котором отрисовываем график.
+                        element: 'graphdiv',
+                        // Данные графика. Каждая запись в этом массиве соответствует точке на графике.
+                        data: graphData,
+                        // Название атрибута данных, содержащего значения по оси x.
+                        xkey: 'date',
+                        // Список имен атрибутов данных, содержащих значения по оси y.
+                        ykeys: ['value'],
+                        // Подписи для ykeys - отображаются при наведении на график.
+                        labels: ['Рейтинг'],
+                        // Установка минимального и максимального значения для оси y
+                        ymin: 'auto',  // автоматически определить минимальное значение
+                        ymax: 'auto',   // автоматически определить максимальное значение
+                        // Установка минимального и максимального значения для оси x
+                        xmin: 'auto',  // автоматически определить минимальное значение
+                        xmax: 'auto',   // автоматически определить максимальное значение
+                        smooth: false
+                    });
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        });
+    </script>
+
+</div>

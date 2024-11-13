@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<h1 class="pt-3"><span class="logo-font">SpinPoint :</span> играйте, наслаждайтесь, побеждайте!</h1>
+<div class="container-fluid px-2 mx-0">
+    <div class="row mt-3 px-0">
+        <div class="col-12 col-md-6 col-lg-4 mb-4">
+            {% if user.is_authenticated %}
+                <h4>Участвуйте в жизни сообщества <span class="logo-font">SpinPoint</span>, чтобы:</h4>
+            {% else %}
+                <h4>Присоединяйтесь к сообществу <span class="logo-font">SpinPoint</span>, чтобы:</h4>
+            {% endif %}
+            <ul>
+                <li class="mb-2">Познакомиться с единомышленниками, готовыми играть с Вами в настольный теннис.</li>
+                <li class="mb-2">Развиваться как игрок, участвуя в тренировках и обмениваясь опытом с другими участниками.</li>
+                <li class="mb-2">Играть в увлекательные турниры, где каждый может ощутить соревновательный азарт.</li>
+                <li class="mb-2">И, конечно же, наслаждаться атмосферой, в которой настольный теннис становится неотъемлемой частью вашей жизни.</li>
+            </ul>
+            {% if not user.is_authenticated %}
+                <a href="{% url 'players:registration' %}" class="btn btn-primary text-uppercase">Присоединиться</a>
+            {% endif %}
+
+        </div>
+        <div class="col-12 col-md-6 col-lg-4 mb-4">
+            <!-- Event Carousel -->
+            <div id="carouselEvents" class="carousel slide carousel-dark" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+
+                        <figure class="figure text-center">
+                            <a href="{% url 'news:get_the_open_news' pk=first_news.pk %}">
+                                <img src="{{ first_news.cover.url }}" class="figure-img img-fluid rounded d-block mx-auto object-fit-cover h-50" alt="{{ first_news.name }}">
+                            </a>
+                            <figcaption class="figure-caption">{{ first_news.name }}</figcaption>
+                        </figure>
+                    </div>
+                    {% for item in news %}
+                    <div class="carousel-item">
+                        <figure class="figure text-center">
+                            <a href="{% url 'news:get_the_open_news' pk=item.pk %}">
+                                <img src="{{ item.cover.url }}" class="figure-img img-fluid rounded d-block mx-auto object-fit-cover" alt="{{ item.name }}">
+                            </a>
+                            <figcaption class="figure-caption">{{ item.name }}</figcaption>
+                        </figure>
+                    </div>
+                    {% endfor %}
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselEvents" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Предыдущий</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselEvents" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Следующий</span>
+                </button>
+            </div>
+            <a href="{% url 'news:public_news_list' %}" class="btn btn-secondary mt-3 d-block">Посмотреть все события</a>
+        </div>
+        <div class="col-12 col-md-6 col-lg-4 mb-4 text-center">
+            <h4>Недавние игры</h4>
+            <table class="table">
+              <tbody>
+                <tr>
+                  <td>Mark</td>
+                  <td>3:2</td>
+                  <td>Carl</td>
+                </tr>
+                <tr>
+                  <td>Jacob</td>
+                  <td>1:3</td>
+                  <td>Ball</td>
+                </tr>
+                <tr>
+                  <td>Larry</td>
+                  <td>3:0</td>
+                  <td>Jenny</td>
+                </tr>
+                <tr>
+                  <td>Mark</td>
+                  <td>3:2</td>
+                  <td>Carl</td>
+                </tr>
+                <tr>
+                  <td>Jacob</td>
+                  <td>1:3</td>
+                  <td>Ball</td>
+                </tr>
+                <tr>
+                  <td>Larry</td>
+                  <td>3:0</td>
+                  <td>Jenny</td>
+                </tr>
+                <tr>
+                  <td>Mark</td>
+                  <td>3:2</td>
+                  <td>Carl</td>
+                </tr>
+                <tr>
+                  <td>Jacob</td>
+                  <td>1:3</td>
+                  <td>Ball</td>
+                </tr>
+                <tr>
+                  <td>Larry</td>
+                  <td>3:0</td>
+                  <td>Jenny</td>
+                </tr>
+              </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
