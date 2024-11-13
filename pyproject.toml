@@ -1,0 +1,83 @@
+[tool.poetry]
+name = "spin-point"
+version = "0.1.0"
+description = "SpinPoint is the social network for table-tennis players"
+authors = ["Dzmitry Yakimchuk <dzmitry.email@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+Django = "4.2.9"
+psycopg2 = "2.9.9"
+python-dotenv = "1.0.0"
+pillow = "10.2.0"
+django-notifications-hq = "1.8.3"
+djangorestframework = "3.14.0"
+gunicorn = "20.1.0"
+
+[tool.poetry.group.dev.dependencies]
+ipython = "8.21.0"
+django-extensions = "3.2.3"
+django-debug-toolbar = "4.2.0"
+mypy = "1.10.0"
+flake8 = "7.0.0"
+isort = "5.13.2"
+black = "24.4.2"
+pre-commit = "3.7.1"
+pyproject-flake8 = "7.0.0"
+types-python-dateutil = "2.9.0.20240316"
+types-sqlalchemy-utils = "1.1.0"
+pytest = "8.3.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+# MYPY section
+[tool.mypy]
+exclude = [
+    ".env",
+    ".venv",
+    ".git",
+    "__pycache__"
+]
+plugins = [
+    "sqlalchemy.ext.mypy.plugin",
+    "pydantic.mypy",
+]
+
+# BLACK section
+[tool.black]
+line_length = 88
+
+# ISORT section
+[tool.isort]
+profile = "black"
+line_length = 88
+skip = [
+    ".venv",
+    ".git",
+    "__pycache__"
+]
+
+# FLAKE8 section
+[tool.flake8]
+max-line-length = 88
+exclude = [
+    "./.venv",
+    ".git",
+    "__pycache__"
+]
+extend-ignore = [
+    "E800",
+    "E501",
+    "E203",
+]
+
+# pyproject.toml
+[tool.pytest.ini_options]
+markers = [
+    "integration: marks integration tests",
+    "unit: marks unit tests"
+]
+
