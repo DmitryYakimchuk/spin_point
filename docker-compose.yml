@@ -1,4 +1,4 @@
-version: '3.9'
+name: spin_point
 
 services:
   db:
@@ -11,19 +11,37 @@ services:
       POSTGRES_DB: ${DB_NAME}
     volumes:
       - spin_point_postgres_data:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
     ports:
       - "${DB_PORT}:5432"
 
-  web:
-    build: .
-    volumes:
-      - .:/app
-    ports:
-      - "8000:8000"
+  app_base: &app_base
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: app
     env_file:
       - .env
+    environment:
+      BLACK_CACHE_DIR: /app/.black_cache
+    ports:
+      - "8000:8000"
     depends_on:
       - db
+    extra_hosts:
+      - "localhost:host-gateway"  # Remove in production
+    command: sh -c "poetry run python manage.py migrate && poetry run python manage.py runserver 0.0.0.0:8000"
+    restart: unless-stopped
+
+  app-dev:
+    <<: *app_base
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: app_dev
+    volumes:
+      - .:/app
+      - /app/.venv  # Explicitly exclude .venv from being mounted
 
 volumes:
   spin_point_postgres_data:

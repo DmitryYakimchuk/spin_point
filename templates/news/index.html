@@ -29,10 +29,11 @@
                     <div class="carousel-item active">
 
                         <figure class="figure text-center">
-                            <a href="{% url 'news:get_the_open_news' pk=first_news.pk %}">
-                                <img src="{{ first_news.cover.url }}" class="figure-img img-fluid rounded d-block mx-auto object-fit-cover h-50" alt="{{ first_news.name }}">
+                            <a href="#">
+{% comment %}<!--                                {% url 'news:get_the_open_news' pk=first_news.pk %} -->{% endcomment %}
+                                <img src="static/img/default/default_news.png" class="figure-img img-fluid rounded d-block mx-auto object-fit-cover h-50" alt="Mock table-tennis news">
                             </a>
-                            <figcaption class="figure-caption">{{ first_news.name }}</figcaption>
+                            <figcaption class="figure-caption">Mock table-tennis news</figcaption>
                         </figure>
                     </div>
                     {% for item in news %}

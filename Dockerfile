@@ -1,17 +1,47 @@
-FROM python:3.11.4-slim
+FROM python:3.11.4-slim as build_app
 
-RUN apt-get update && apt-get install -y \
-    libpq-dev \
-    && rm -rf /var/lib/apt/lists/*
+ENV APP_ROOT=/app
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONPATH=$APP_ROOT
 
-WORKDIR /app
+RUN apt update \
+    && apt install -y postgresql postgresql-contrib libpq-dev gcc
+
+RUN pip install poetry==1.8.2
+
+WORKDIR $APP_ROOT
+COPY pyproject.toml poetry.lock poetry.toml $APP_ROOT
+RUN poetry install --without dev --no-root
+
+FROM build_app as build_app_dev
+
+RUN poetry install --only dev
+
+FROM build_app as app
 
 COPY . .
 
-RUN pip install --no-cache-dir -r requirements.txt
+ARG USER_NAME=app
+ARG GROUP_NAME=app
 
-# Django-env
-ENV PYTHONUNBUFFERED=1
-ENV DJANGO_SETTINGS_MODULE=ttennis.settings.py
+RUN addgroup --system $GROUP_NAME
+RUN adduser --system $USER_NAME
 
-CMD ["sh", "-c", "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]
+RUN chown -R $USER_NAME:$GROUP_NAME $APP_ROOT
+
+USER $USER_NAME
+
+FROM build_app_dev as app_dev
+
+COPY . .
+
+ARG USER_NAME=app
+ARG GROUP_NAME=app
+
+RUN addgroup --system $GROUP_NAME
+RUN adduser --system $USER_NAME
+
+RUN chown -R $USER_NAME:$GROUP_NAME $APP_ROOT
+
+USER $USER_NAME
