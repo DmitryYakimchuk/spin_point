@@ -33,7 +33,7 @@ On the local site http://localhost:8000 you can register new users, make new clu
 * Django 4.2.9
 * PostgreSQL 16
 * Docker and docker compose
-* Frontend: HTML + CSS + DTL + JavaScript
+* Frontend: HTML + CSS + DTL + JavaScript + Bootstrap5
 
 ## Application screenshots
 <img src="static/img/screenshots/index.png" alt="SpinPoint">
