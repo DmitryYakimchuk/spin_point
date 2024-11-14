@@ -8,22 +8,24 @@ please, don't be shy to contact me. I will add you to our small group of ambitie
 
 ## Getting started
 
-To see how the *SpinPoint* concept works follow the six simple steps:
+To see how the *SpinPoint* concept works follow the seven simple steps:
 1. Clone the repository:
 ```bash
 git clone  https://github.com/DmitryYakimchuk/spin_point.git
 ```
-2. Create `.env` with some environment variables in the root of the app. See the `.env.template` as an example one (You can just copy it if you like).
-3. Use Docker compose to build the images for the app:
+2. Run the [Docker](https://www.docker.com/) on your machine.
+3. Create `.env` with some environment variables in the root of the app. For this just copy `.env.template` as an example.
+If you would like to change te settings, change them in `init-db.sql` as well.
+4. Use Docker compose to build the images for the app:
 ```bash
 docker compose build
 ```
-4. Run the app:
+5. Run the app:
 ```bash
 docker compose up app-dev
 ```
-5. Open your browser and go to http://localhost:8000
-6. To be able to see more functionality register in the app as a new user.
+6. Open your browser and go to http://localhost:8000
+7. To be able to see more functionality register in the app as a new user.
 
 On the local site http://localhost:8000 you can register new users, make new club, news, find other users who want to play with you and so on...
 
